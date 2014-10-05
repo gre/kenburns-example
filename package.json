@@ -1,6 +1,6 @@
 {
   "name": "kenburns-example",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A kenburns example based on wikipedia's Ken Burns Effect example.",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   "dependencies": {
     "bezier-easing": "^0.4.3",
     "glsl-transition": "^0.6.6",
-    "kenburns": "^0.4.1",
+    "kenburns": "^0.5.0",
     "q": "^1.0.1",
     "qimage": "^1.2.0"
   }
