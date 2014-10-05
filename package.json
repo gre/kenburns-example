@@ -1,0 +1,29 @@
+{
+  "name": "kenburns-example",
+  "version": "0.0.0",
+  "description": "A kenburns example based on wikipedia's Ken Burns Effect example.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gre/kenburns-example"
+  },
+  "keywords": [
+    "kenburns"
+  ],
+  "author": "Gaëtan Renaudeau",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gre/kenburns-example/issues"
+  },
+  "homepage": "https://github.com/gre/kenburns-example",
+  "dependencies": {
+    "bezier-easing": "^0.4.3",
+    "glsl-transition": "^0.6.6",
+    "kenburns": "^0.4.1",
+    "q": "^1.0.1",
+    "qimage": "^1.2.0"
+  }
+}
