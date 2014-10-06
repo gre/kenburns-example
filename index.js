@@ -7,7 +7,7 @@ var TransitionFade = require("transition-fade");
 [
   { name: "Canvas2D", kenburns: KenBurns.Canvas2D, fade: TransitionFade.Canvas2D, createElement: createCanvas },
   { name: "WebGL", kenburns: KenBurns.WebGL, fade: TransitionFade.WebGL, createElement: createCanvas },
-  { name: "DOM", kenburns: KenBurns.DOM, fade: TransitionFade.DOM, createElement: createDiv }
+  { name: "DOM (experimental)", kenburns: KenBurns.DOM, fade: TransitionFade.DOM, createElement: createDiv }
 ]
 .map(function (params) {
 
