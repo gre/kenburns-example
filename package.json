@@ -1,6 +1,6 @@
 {
   "name": "kenburns-example",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A kenburns example based on wikipedia's Ken Burns Effect example.",
   "main": "index.js",
   "scripts": {
