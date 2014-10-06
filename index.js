@@ -1,22 +1,34 @@
 var KenBurns = require("kenburns");
 var Q = require("q");
 var Qimage = require("qimage");
-var GlslTransition = require("glsl-transition");
 var BezierEasing = require("bezier-easing");
+var TransitionFade = require("transition-fade");
+
+[
+  { name: "Canvas2D", kenburns: KenBurns.Canvas2D, fade: TransitionFade.Canvas2D, createElement: createCanvas },
+  { name: "WebGL", kenburns: KenBurns.WebGL, fade: TransitionFade.WebGL, createElement: createCanvas },
+  { name: "DOM (experimental)", kenburns: KenBurns.DOM, fade: TransitionFade.DOM, createElement: createDiv }
+]
+.map(function (params) {
+
+var h1 = document.createElement("h1");
+h1.textContent = params.name;
+document.body.appendChild(h1);
 
 // Create the DOM
 
 var container = document.createElement("div");
 document.body.appendChild(container);
-var canvasTransition = createCanvas();
-var canvas1 = createCanvas();
-var canvas2 = createCanvas();
+
+var transitionElt = params.createElement();
+var elt1 = params.createElement();
+var elt2 = params.createElement();
 
 // Create a fade transition and 2 ken burns effects engine.
 
-var fade = GlslTransition(canvasTransition)("#ifdef GL_ES\nprecision highp float;\n#endif\nuniform vec2 resolution;uniform sampler2D from, to;uniform float progress;void main() {vec2 p = gl_FragCoord.xy / resolution;gl_FragColor = mix(texture2D(from, p), texture2D(to, p), progress);}");
-var kenBurns1 = new KenBurns.Canvas(canvas1);
-var kenBurns2 = new KenBurns.Canvas(canvas2);
+var fade = params.fade(transitionElt);
+var kenBurns1 = new params.kenburns(elt1);
+var kenBurns2 = new params.kenburns(elt2);
 
 // Wait the 4 images to load.
 
@@ -57,21 +69,21 @@ Q.all([
   // Chain the effects and transitions.
 
   return Q(images[0])
-  .then(displayF(canvas1))
+  .then(displayF(elt1))
   .then(kenBurns1.runPartial(robertSteps[0], robertSteps[1], 5000))
   .delay(4000)
   .then(function () {
-    display(canvasTransition);
-    kenBurns1.one(images[0], robertSteps[1]); // Flush the canvas1 – workaround for a Firefox bug
+    display(transitionElt);
+    kenBurns1.one(images[0], robertSteps[1]); // Flush the elt1 – workaround for a Firefox bug
     return Q.all([
       kenBurns2.setClamped(false).run(images[1], georgeSteps[0], georgeSteps[1], 6000, BezierEasing(0, 0, 0.5, 1)),
-      fade({ from: canvas1, to: canvas2 }, 2000).then(displayF(canvas2))
+      fade(elt1, elt2, 2000).then(displayF(elt2))
     ]);
   })
   .delay(4000)
   .thenResolve(images[2])
   .then(kenBurns1.onePartial(battleSteps[0]))
-  .then(displayF(canvas1))
+  .then(displayF(elt1))
   .delay(3500)
   .then(kenBurns1.runPartial(battleSteps[0], battleSteps[1], 400))
   .delay(3500)
@@ -84,13 +96,13 @@ Q.all([
   .then(kenBurns1.runPartial(battleSteps[4], battleSteps[5], 200))
   .delay(5000)
   .then(function () {
-    display(canvasTransition);
-    kenBurns1.one(images[2], battleSteps[5]); // Flush the canvas1 – workaround for a Firefox bug
-    return fade({ from: canvas1, to: images[3] }, 2000);
+    display(transitionElt);
+    kenBurns1.one(images[2], battleSteps[5]); // Flush the elt1 – workaround for a Firefox bug
+    return fade(elt1, images[3], 2000);
   })
   .thenResolve(images[3])
   .then(kenBurns2.onePartial(battleRealSteps[0]))
-  .then(displayF(canvas2))
+  .then(displayF(elt2))
   .delay(2000)
   .then(kenBurns2.runPartial(battleRealSteps[0], battleRealSteps[1], 2000))
   ;
@@ -112,6 +124,8 @@ function displayF (elt) {
   };
 }
 
+});
+
 function createCanvas () {
   var canvas = document.createElement("canvas");
   canvas.width = 640;
@@ -119,3 +133,9 @@ function createCanvas () {
   return canvas;
 }
 
+function createDiv () {
+  var div = document.createElement("div");
+  div.style.width = "640px";
+  div.style.height = "480px";
+  return div;
+}
